@@ -65,15 +65,15 @@ sections:
         - title: System Value Optimisation Engineer
           company: General Electric
           company_url: 'https://www.ge.com/'
-          company_logo: org-gc
+          company_logo: org-ge
           location: Bengaluru, India
-          date_start: '2020-08-01'
-          date_end: '2022-07-01'
+          date_start: '2022-07-01'
+          date_end: '2023-07-01'
           description: Software developement for wind turbine loads optimisation
         - title: Edison Engineer
           company: General Electric
           company_url: 'https://www.ge.com/'
-          company_logo: org-gc
+          company_logo: org-ge
           location: Bengaluru, India
           date_start: '2020-08-01'
           date_end: '2022-07-01'
@@ -96,7 +96,7 @@ sections:
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
           description: 'Instructor - Prof. Sunita Sarawagi, Grade - 10/10'
-          icon: iit
+          icon: moodle
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: CS 725 - Foundations of Machine Learning
@@ -104,7 +104,7 @@ sections:
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
           description: 'Instructor - Prof. Dwaipayan Mukherjee, Grade - 9/10'
-          icon: iit
+          icon: moodle
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: EE 635 - Applied Linear Algebra
@@ -112,7 +112,7 @@ sections:
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
           description: 'Instructor - Prof K S Mallikarjuna Rao, Grade - 9/10'
-          icon: iit
+          icon: moodle
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: IE 621 - Introduction to Probability and Stochastic Processes I
