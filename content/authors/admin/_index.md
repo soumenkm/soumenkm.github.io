@@ -10,7 +10,7 @@ first_name: Soumen
 last_name: Mondal
 
 # Status emoji
-status: Studying at IITB
+status:
   icon: 👩🏻‍💻📓✍🏻💡
 
 # Is this the primary user of the site?
