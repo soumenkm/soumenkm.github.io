@@ -69,7 +69,7 @@ sections:
           location: Bengaluru, India
           date_start: '2022-07-01'
           date_end: '2023-07-01'
-          description: Software developement for wind turbine loads optimisation
+          # description: 
         - title: Edison Engineer
           company: General Electric
           company_url: 'https://www.ge.com/'
@@ -77,7 +77,7 @@ sections:
           location: Bengaluru, India
           date_start: '2020-08-01'
           date_end: '2022-07-01'
-          description: Software developement for wind turbine loads simulation
+          # description: 
     design:
       columns: '2'
   - block: accomplishments
@@ -95,24 +95,24 @@ sections:
       items:
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
-          description: 'Instructor - Prof. Sunita Sarawagi, Grade - 10/10'
-          icon: moodle
+          description: ''
+          icon: <i class="fa-solid fa-book"></i>
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: CS 725 - Foundations of Machine Learning
           url: 'https://www.cse.iitb.ac.in/~sunita/cs725/'
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
-          description: 'Instructor - Prof. Dwaipayan Mukherjee, Grade - 9/10'
-          icon: moodle
+          description: ''
+          icon: <i class="fa-solid fa-book"></i>
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: EE 635 - Applied Linear Algebra
           url: 'https://www.ee.iitb.ac.in/web/course_lists/ee-635-applied-linear-algebra-in-electrical-engineering/'
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
-          description: 'Instructor - Prof K S Mallikarjuna Rao, Grade - 9/10'
-          icon: moodle
+          description: ''
+          icon: <i class="fa-solid fa-book"></i>
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: IE 621 - Introduction to Probability and Stochastic Processes I
@@ -233,7 +233,7 @@ sections:
       phone: +91 9867484159
       # appointment_url: 'https://calendly.com'
       address:
-        street: Hostel 18
+        street: Hostel 18, IIT Bombay
         city: Mumbai
         region: MH
         postcode: '400076'
