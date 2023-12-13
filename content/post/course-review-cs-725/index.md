@@ -1,7 +1,7 @@
 ---
 title: Course Review CS 725
 date: '2023-12-12'
-summary: Review for *CS 725 - Foundations of Machine Learning*
+summary: Review for *CS 725 - Foundations of Machine Learning*.
 ---
 
 ## CS 725 - Foundations of Machine Learning

@@ -1,8 +1,8 @@
 ---
 title: Course Review EE 635
 date: '2023-12-12'
-summary: Review for *EE 635 - Applied Linear Algebra*
-
+summary: Review for EE 635 - *Applied Linear Algebra*.
+---
 ## EE 635 – Applied Linear Algebra
 
 **Year:** 2023-24 Autumn Semester  
