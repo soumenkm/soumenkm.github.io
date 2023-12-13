@@ -1,10 +1,9 @@
 ---
 title: Course Review EE 635
 date: '2023-12-12'
-summary: Review for courses that I have credited at IIT Bombay.
----
+summary: Review for *EE 635 - Applied Linear Algebra*
 
-## Course Review: EE 635 – Applied Linear Algebra
+## EE 635 – Applied Linear Algebra
 
 **Year:** 2023-24 Autumn Semester  
 **Instructor:** Prof. Dwaipayan Mukherjee
@@ -67,5 +66,4 @@ While no formal prerequisites are required, having prior exposure to MIT's Linea
 
 ### Reviewed by
 
-Soumen Mondal
-Email: 23m2157@iitb.ac.in
+Soumen Mondal (Email: 23m2157@iitb.ac.in)
