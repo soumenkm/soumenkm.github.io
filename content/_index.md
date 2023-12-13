@@ -96,7 +96,8 @@ sections:
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
           description: ''
-          icon: <i class="fa-solid fa-book"></i>
+          icon: book
+          icon_pack: fa
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: CS 725 - Foundations of Machine Learning
@@ -104,7 +105,8 @@ sections:
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
           description: ''
-          icon: <i class="fa-solid fa-book"></i>
+          icon: book
+          icon_pack: fa
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: EE 635 - Applied Linear Algebra
@@ -112,7 +114,8 @@ sections:
         - date_end: '2023-12-01'
           date_start: '2023-08-01'
           description: ''
-          icon: <i class="fa-solid fa-book"></i>
+          icon: book
+          icon_pack: fa
           organization: IIT Bombay
           organization_url: https://www.iitb.ac.in
           title: IE 621 - Introduction to Probability and Stochastic Processes I

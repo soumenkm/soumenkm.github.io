@@ -25,8 +25,7 @@ organizations:
     url: https://www.minds.iitb.ac.in/
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research interests include machine learning and artificial intelligence.
-
+bio: I write blogs related to programming, machine learning and AI.
 # Interests to show in About widget
 interests:
   - Artificial Intelligence
