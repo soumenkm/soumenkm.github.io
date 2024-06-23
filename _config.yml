@@ -22,17 +22,17 @@ repository               : "soumenkm/soumenkm.github.io"
 author:
   # Biographic information
   avatar           : "profile.png"
-  name             : "Soumen Mondal (সৌমেন মন্ডল)"
+  name             : "Soumen Mondal\n(সৌমেন মন্ডল)"
   pronouns         : "he/him"  
-  bio              : "I am a Master's student specializing in Artificial Intelligence at IIT Bombay"
+  bio              : "I am a Master's student specializing in Artificial Intelligence and Data Science at IIT Bombay"
   location         : "Mumbai, India"
   employer         : "IIT Bombay, India"
   uri              : # URL
   email            : "23m2157@iitb.ac.in" 
 
   # Academic websites
-  arxiv            : "https://openreview.net/profile?id=~Soumen_Kumar_Mondal1"
-  googlescholar    : "https://scholar.google.com"
+  openreview       : "https://openreview.net/profile?id=~Soumen_Kumar_Mondal1"
+  googlescholar    : # URL
   impactstory      : # URL
   orcid            : # URL
   semantic         : # URL
@@ -49,6 +49,8 @@ author:
 
   # Social media
   bluesky          : # Replace this with you Bluesky username
+  linkedin         : "soumen-mondal-680051a2"
+  twitter          : "soumen_skm"
   facebook         : "soumenkm"
   flickr           : # Username
   foursquare       : # Username
@@ -57,7 +59,6 @@ author:
   keybase          : # Username
   instagram        : "soumenkm"
   lastfm           : # Username
-  linkedin         : "soumen-mondal-680051a2"
   mastodon         : # URL
   medium           : # URL
   pinterest        : # Username
@@ -65,7 +66,7 @@ author:
   steam            : # Username
   telegram         : # URL
   tumblr           : # Username
-  twitter          : "soumen_skm"
+  
   vine             : # Username
   weibo            : # Username
   wikipedia        : # Username
