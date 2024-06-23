@@ -3,8 +3,8 @@ title: 'Course Review IE 621'
 date: 2023-12-12
 permalink: /posts/2023/12/course-review-ie-621/
 tags:
-  - Deep Learning
-  - Computer Vision
+  - Probability
+  - Machine Learning
   - IIT Bombay
 ---
 

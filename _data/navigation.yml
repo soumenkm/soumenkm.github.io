@@ -6,8 +6,8 @@ main:
   # - title: "Talks"
   #   url: /talks/    
 
-  - title: "Research"
-    url: /teaching/    
+  - title: "Research and Projects"
+    url: /research_projects/    
     
   # - title: "Portfolio"
   #   url: /portfolio/
@@ -16,7 +16,7 @@ main:
     url: /year-archive/
     
   - title: "CV"
-    url: /cv/
+    url: /files/resume.pdf
     
   # - title: "Guide"
   #   url: /markdown/

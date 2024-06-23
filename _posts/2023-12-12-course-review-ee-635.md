@@ -3,8 +3,8 @@ title: 'Course Review EE 635'
 date: 2023-12-12
 permalink: /posts/2023/12/course-review-ee-635/
 tags:
-  - Deep Learning
-  - Computer Vision
+  - Linear Algebra
+  - Machine Learning
   - IIT Bombay
 ---
 

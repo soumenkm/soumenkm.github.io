@@ -3,8 +3,8 @@ title: 'Course Review CS 725'
 date: 2023-12-12
 permalink: /posts/2023/12/course-review-cs-725/
 tags:
-  - Deep Learning
-  - Computer Vision
+  - Machine Learning
+  - Artificial Intelligence
   - IIT Bombay
 ---
 

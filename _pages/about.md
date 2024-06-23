@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Welcome to Soumen Mondal's Academic Website"
+title: "🙋‍♂️ Hello there, I'm Soumen!"
 author_profile: true
 redirect_from: 
   - /about/
