@@ -49,10 +49,14 @@ The primary motivation for using embeddings is to translate high-dimensional, sp
 
 ### 1.3. Mathematical Definition of Embedding
 
-Mathematically, an embedding can be defined as a mapping:
-$$f: X \rightarrow \mathbb{R}^d$$
-Where:
+Mathematically, an embedding can be defined as a mapping: $f: X \rightarrow \mathbb{R}^d$ where:
 > $X$ is the original input space (possibly categorical data). $\mathbb{R}^d$ is the embedding vector space with dimension $d$. The mapping $f$ is typically a function parameterized by weights learned from the training data.
+
+\[
+f: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m >> n
+\]
+
+The above equation shows one special case of using the embedding map where we are converting the embedding from m-dimensional vector space to n-dimensional vector space where m is larger than n.
 
 ### 1.4. Different Types of Embeddings
 
