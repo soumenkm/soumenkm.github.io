@@ -52,21 +52,9 @@ The primary motivation for using embeddings is to translate high-dimensional, sp
 Mathematically, an embedding can be defined as a mapping: $f: X \rightarrow \mathbb{R}^d$ where:
 > $X$ is the original input space (possibly categorical data). $\mathbb{R}^d$ is the embedding vector space with dimension $d$. The mapping $f$ is typically a function parameterized by weights learned from the training data.
 
-\\begin{equation}
-f1: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m >> n
-\\end{equation}
-\begin{equation}
-f2: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m >> n
-\end{equation}
 \[
-f3: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m >> n
+f: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m >> n
 \]
-[
-f4: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m >> n
-]
-$$
-f5: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m >> n
-$$
 
 The above equation shows one special case of using the embedding map where we are converting the embedding from m-dimensional vector space to n-dimensional vector space where m is larger than n.
 
@@ -105,29 +93,3 @@ In NLP, models like GPT, BERT etc. use positional embeddings to retain the order
 ### Written by
 
 > Soumen Mondal (Email: [23m2157@iitb.ac.in](mailto:23m2157@iitb.ac.in))
-
-<!-- ### Tables
-
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [PlDb](https://plugins/dropbox/README.md) |
-| GitHub | abc | -->
-
-<!-- ### Code
-
-```sh
-docker run -d -p 8000:8080 --restart=always --cap-add=SYS_ADMIN --name=dillinger <youruser>/dillinger:${package.json.version}
-```
-
-> Note: `--capt-add=SYS-ADMIN` is required for PDF rendering.
-
-```python
-import torch
-a = torch.tensor([1,2,3])
-print(a)
-if a.dim() > 2:
-    raise ValueError("Invalid!")
-for i in a:
-  print(f"Hello {a}")
-
-``` -->
