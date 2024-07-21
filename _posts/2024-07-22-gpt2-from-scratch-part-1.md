@@ -67,7 +67,7 @@ Word embeddings are extensively used in transformer based large language models 
 
 For language modeling task, we could use the pre-trained word embeddings such as one obtained from Word2Vec to generate the word embeddings but it won't be efficient due to mismatch between Word2vec's training corpus and the GPT like LLM's training corpus. To capture complex patterns and context in the training corpus, LLMs would generate the word embeddings on the fly, directly from the training data at the time of training the model. This embedding vector will be highly optimized for the training corpus that have been used to train the LLM.
 
-![Word Embedding](./blog_image/word_embedding.jpeg "Word Embedding")
+![Word Embedding](/soumenkm.github.io/_posts/blog_image/word_embedding.jpeg "Word Embedding")
 
 #### 1.4.2 Sentence/Document Embeddings
 
@@ -78,3 +78,13 @@ Sentence or document embeddings extend the concept of word embeddings to larger 
 Positional embeddings are used in models that need to understand sequence order (like sentences in text or time series data), adding information about the relative or absolute position of elements in the sequence.
 
 In NLP, models like GPT, BERT etc. use positional embeddings to retain the order of words in a sentence which is crucial for understanding context and meaning accurately. This itself is a huge topic and it will be covered in the blog where I will cover GPT model.
+
+### Reference Books
+
+- Sebastian Raschka, _Build a Large Language Model (From Scratch)_
+- Aston Zhang, _Dive into Deep Learning_
+- Daniel Jurafsky, _Speech and Language Processing_
+
+### Written by
+
+Soumen Mondal (Email: [23m2157@iitb.ac.in](mailto:23m2157@iitb.ac.in))
