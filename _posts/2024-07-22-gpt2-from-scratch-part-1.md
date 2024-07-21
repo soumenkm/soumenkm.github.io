@@ -11,25 +11,25 @@ tags:
   - IIT Bombay
 ---
 
-## [Part 1] GPT2 from Scratch: Preparation of Data Pipeline
+## Part 1 - GPT2 from Scratch: Preparation of Data Pipeline
 
 >**Table of Contents:**
 >
 > 1. Embeddings
-> 1.1. What is Embedding?
-> 1.2. Why is Embedding Required?
-> 1.3. Mathematical Definition of Embedding
-> 1.4. Different Types of Embeddings
+    1. What is Embedding?
+    2. Why is Embedding Required?
+    3. Mathematical Definition of Embedding
+    4. Different Types of Embeddings
 > 2. Tokenization
-> 2.1. What is Tokenization?
-> 2.2 Why is Tokenization Required?
-> 2.3. Implement a Simple Tokenizer
-> 2.4. Byte Pair Encoding (BPE)
-> 2.5. Huggingface 🤗 Tokenizers
+    1. What is Tokenization?
+    2. Why is Tokenization Required?
+    3. Implement a Simple Tokenizer
+    4. Byte Pair Encoding (BPE)
+    5. Huggingface 🤗 Tokenizers
 > 3. Data Pipeline for GPT
-> 3.1. Data Sampling by Sliding Window
-> 3.2. Generate Word Embeddings
-> 3.3. Generate Positional Embeddings
+    1. Data Sampling by Sliding Window
+    2. Generate Word Embeddings
+    3. Generate Positional Embeddings
 
 ## 1. Embeddings
 
@@ -49,8 +49,9 @@ The primary motivation for using embeddings is to translate high-dimensional, sp
 
 ### 1.3. Mathematical Definition of Embedding
 
-Mathematically, an embedding can be defined as a mapping  $f: X \rightarrow \mathbb{R}^d$  where:
-
+Mathematically, an embedding can be defined as a mapping:
+$$f: X \rightarrow \mathbb{R}^d$$
+Where:
 > $X$ is the original input space (possibly categorical data). $\mathbb{R}^d$ is the embedding vector space with dimension $d$. The mapping $f$ is typically a function parameterized by weights learned from the training data.
 
 ### 1.4. Different Types of Embeddings
@@ -67,7 +68,7 @@ Word embeddings are extensively used in transformer based large language models 
 
 For language modeling task, we could use the pre-trained word embeddings such as one obtained from Word2Vec to generate the word embeddings but it won't be efficient due to mismatch between Word2vec's training corpus and the GPT like LLM's training corpus. To capture complex patterns and context in the training corpus, LLMs would generate the word embeddings on the fly, directly from the training data at the time of training the model. This embedding vector will be highly optimized for the training corpus that have been used to train the LLM.
 
-![Word Embedding](/soumenkm.github.io/_posts/blog_image/word_embedding.jpeg "Word Embedding")
+![Word Embedding](/images/word_embedding.jpeg "Word Embedding")
 
 #### 1.4.2 Sentence/Document Embeddings
 
@@ -87,4 +88,4 @@ In NLP, models like GPT, BERT etc. use positional embeddings to retain the order
 
 ### Written by
 
-Soumen Mondal (Email: [23m2157@iitb.ac.in](mailto:23m2157@iitb.ac.in))
+> Soumen Mondal (Email: [23m2157@iitb.ac.in](mailto:23m2157@iitb.ac.in))
