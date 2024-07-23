@@ -1,12 +1,11 @@
 import re
 
-pattern1 = r"(--|[,.?_:;\"'()!]|\s)"
-pattern2 = r"(--|[^0-9a-zA-Z])"
-pattern3 = r"(--|[^0-9a-zA-Z]|\d+)"
-text = "abc1-def2 -- ghi123. jkl 2 30 mno."
-result1 = re.split(pattern1, text)
-result2 = re.split(pattern2, text)
-result3 = re.split(pattern3, text)
-print(result1)
-print(result2)
-print(result3)
+text = """Generative pre-trained transformers (GPT) are a type of large language model (LLM) and a prominent framework for generative artificial intelligence.
+They are artificial neural networks that are used in natural language processing tasks.
+GPTs are based on the transformer architecture, pre-trained on large data sets of unlabelled text, and able to generate novel human-like content.
+As of 2023, most LLMs have these characteristics and are sometimes referred to broadly as GPTs."""
+
+# Regular expression to match words and punctuations
+tokens = re.split(r"\s", text)
+
+print(tokens)

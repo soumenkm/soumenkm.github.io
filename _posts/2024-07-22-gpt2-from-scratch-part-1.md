@@ -8,7 +8,6 @@ tags:
   - LLM
   - GPT
   - NLP
-  - IIT Bombay
 ---
 
 ## Part 1 - GPT2 from Scratch: Preparation of Data Pipeline
@@ -27,9 +26,19 @@ tags:
     4. Byte Pair Encoding (BPE) Tokenizer
     5. Huggingface's 🤗 Tokenizer
 > 3. Data Pipeline for GPT
-    1. Data Sampling by Sliding Window
-    2. Generate Word Embeddings
-    3. Generate Positional Embeddings
+    1. Working Principle of GPT
+    2. Data Sampling by Sliding Window
+    3. Create Training Dataset
+
+## Prerequisites
+
+- Firstly, a medium level knowledge of `Python` (including OOPs concepts) is required, as the implementation will be carried out in this language.
+
+- A foundation level machine learning concepts needed to understand the concepts. This includes neural networks, loss functions, training dynamics etc. The knowledge of Recurrent Neural Network (RNN) is a bonus but not strictly needed.
+
+- Experience with deep learning frameworks `PyTorch` is necessary, as it will be used to build and train the model. Basic knowledge of `Huggingface` library is a plus.
+
+- A basic mathematical background in linear algebra and probability will support the understanding of model operations.
 
 ## 1. Embeddings
 
@@ -41,11 +50,9 @@ In the context of machine learning, an _embedding_ is a representation of data (
 
 The primary motivation for using embeddings is to translate high-dimensional, sparse, and non-numeric data into a lower-dimensional, dense, and numeric format that machine learning algorithms can efficiently process. This transformation facilitates better model performance.
 
-- **Dimensionality Reduction:** Many machine learning models perform better when the input data is not high-dimensional due to the curse of dimensionality. Embeddings help in reducing the dimensions while retaining its essential features.
+Many machine learning models perform better when the input data is not high-dimensional due to the curse of dimensionality. Embeddings help in reducing the dimensions while retaining its essential features. Embeddings learn to capture the underlying patterns in the data, acting as learned features that are useful for various tasks like classification, clustering, or summarization.
 
-- **Feature Learning:** Embeddings learn to capture the underlying patterns in the data, acting as learned features that are useful for various tasks like classification, clustering, or summarization.
-
-- **Handling Categorical Variables:** In many real-world applications, data comes in categorical form (like words, user IDs, or item IDs) that cannot be used directly by most machine learning algorithms, which expect numerical input. Embeddings convert these categorical variables into vectors in a continuous vector space.
+> In many real-world applications, data comes in categorical form (like words, user IDs, or item IDs) that cannot be used directly by most machine learning algorithms, which expect numerical input. Embeddings convert these categorical variables into vectors in a continuous vector space.
 
 ### 1.3. Mathematical Definition of Embedding
 
@@ -56,7 +63,7 @@ Mathematically, an embedding can be defined as a mapping: $f: X \rightarrow \mat
 f: \mathbb{R}^m \rightarrow \mathbb{R}^n \quad \text{where} \quad m \gt n
 \]
 
-The above equation shows one special case of using the embedding map where we are converting the embedding from m-dimensional vector space to n-dimensional vector space where m is larger than n.
+The above equation shows one special case of using the embedding map where we are converting the embedding from $m$-dimensional vector space to $n$-dimensional vector space where $m$ is larger than $n$.
 
 ### 1.4. Different Types of Embeddings
 
@@ -98,11 +105,11 @@ The primary purpose of tokenization is to simplify the complex structure of natu
 
 ### 2.2 Why is Tokenization Required?
 
-- **Structure and Manageability:** Natural language is inherently unstructured and variable in length. Tokenization breaks text into consistent, manageable pieces, making it easier for models to process. Tokenization allows models to handle vocabulary efficiently by representing and processing text as sequences of tokens rather than entire sentences or documents at once.
+Natural language is inherently unstructured and variable in length. Tokenization breaks text into consistent, manageable pieces, making it easier for models to process. Tokenization allows models to handle vocabulary efficiently by representing and processing text as sequences of tokens rather than entire sentences or documents at once.
 
-- **Model Training and Performance:** LLMs are trained on numeric data. Tokens are converted into numerical IDs called _token IDs_, which can be fed into embedding layer for generating the embedding vector. By breaking text into tokens, models can learn the context and meaning associated with different sequences of tokens, which is crucial for generating coherent and contextually appropriate responses.
+> LLMs are trained on numeric data. Tokens are converted into numerical IDs called _token IDs_, which can be fed into embedding layer for generating the embedding vector. By breaking text into tokens, models can learn the context and meaning associated with different sequences of tokens, which is crucial for generating coherent and contextually appropriate responses.
 
-- **Efficiency:** Advanced tokenization techniques like subword tokenization (e.g., Byte-Pair Encoding) help in managing vocabulary size by breaking down rare or unknown word into known subword, allowing the model to handle a wider variety of words without significantly increasing the vocabulary size. Efficient tokenization reduces the memory footprint of the LLMs by needing fewer unique tokens for the dataset.
+Advanced tokenization techniques like subword tokenization (e.g., Byte-Pair Encoding) help in managing vocabulary size by breaking down rare or unknown word into known subword, allowing the model to handle a wider variety of words without significantly increasing the vocabulary size. Efficient tokenization reduces the memory footprint of the LLMs by needing fewer unique tokens for the dataset.
 
 ### 2.3 Implement a Simple Tokenizer
 
@@ -584,6 +591,293 @@ Without the `Split`, the decoded text output will look something like:
 Ilovemachinelearning.<|endoftext|>DoyoualsoloveML?
 ```
 
+## 3. Data Pipeline for GPT
+
+### 3.1. Working Principle of GPT
+
+#### 3.1.1 Goal of GPT like LLM
+
+In the architecture of GPT, the task of generating text is approached as a sequence generation problem where the model predicts one token at a time. Each token generated is conditioned on the tokens that precede it, and outputs the probability distribution of the generated token conditioned on previous tokens which is learned during the model's training phase. This approach is what allows GPT models to create coherent and contextually appropriate text based on the input provided.
+
+Mathematically, from the GPT, we try to predict the token $\mathbf{t}^{(i)}$ given the previous sequence of tokens $(\mathbf{t}^{(j)})_{j = 1}^{j = i-1}$. Suppose the GPT predicts the token $\mathbf{t}^{(i)}$ with probability:
+
+\[
+  \mathbb{P}(\mathbf{t}^{(i)} \mid \mathbf{t}^{(i-1)}, \dots, \mathbf{t}^{(1)})
+\]
+
+During the training phase, we try to learn this probability distribution by minimizing the cross entropy loss between the true token and the predicted token which is generated by the GPT model. When given a prompt or a starting sequence of tokens (also called _context_), the GPT model generates the next token that is most likely to follow from the given context. This is achieved through a softmax layer that outputs a probability distribution over the entire vocabulary, and the token with the highest probability is selected as the next token in the sequence.
+
+> In short, the GPT model predicts the next token based on the information of previous tokens. This is called _autoregressive_ nature of the model which means, when the model generates a token $\mathbf{t}^{(i)}$, then it should not look at the future tokens information such as $(\mathbf{t}^{(i+1)}, \mathbf{t}^{(i+2)},\dots,\mathbf{t}^{(T_{max})})$. Rather, it should only look at the previous tokens such as $(\mathbf{t}^{(i-1)}, \mathbf{t}^{(i-2)},\dots,\mathbf{t}^{(1)})$. This is crucial to understand because, we are not providing the input that is limited to only the previous tokens, rather we are providing the entire token sequence that the model supports (up to model's maximum context length ($T_{max}$), a concept which will be discussed in next section).
+
+<p align="center">
+<img src="/images/gpt-model-goal.jpeg" alt="Tokenizer" width="400"/>
+</p>
+
+Note that the GPT model outputs the context vector $\mathbf{z}$ at every token position. To generate the predicted token at a token position $i$, we will feed the context vector $\mathbf{z}^{(i)}$ to a softmax layer over the length of vocabulary. The index corresponding to the maximum softmax probability will denote the predicted token. This figure shows that if we provide a sequence, then it has the capability of generating tokens at all the token positions since the models outputs context vector at all token position.
+
+During training, we would be interested to predict the tokens at all positions but during inference, we would be interested to predict the token at the last position. This is because, we want to minimize the loss at all the token positions, therefore, we would want to predict the tokens at all the token positions. However, note that the predicted token will not always match with the true target token shown in the figure. If there is  a mismatch between the true target token and the predicted token, then the model will incur some loss which will be backpropagated through the layers of the GPT model and that is how the model "learns" to predict accurate tokens at all the token position.
+
+During inference, GPT predicts one token at a time at the last token position as shown in the Figure. The predicted token will then be appended with the input tokens and fed into the model again to predict another token. This process will continue until `<|endoftext|>` token is predicted or a maximum number of generated tokens is reached. However, you must understand the fact that once the model sees an input sequence, it processes the entire sequence at one step to generate the new token. Therefore, the model will predict a new token at one time step.
+
+#### 3.1.2 Difference between RNN and GPT
+
+Recurrent Neural Networks (RNNs) and GPT like architectures represent fundamentally different approaches to handling sequence data in neural networks. RNNs process sequences in a step-by-step manner, maintaining a hidden representation that updates with each item in the sequence. However, this sequential dependency leads to difficulties in parallelizing the process, which can make training on longer sequences computationally expensive and slow. To train the RNN, we have to process one token at a time. That means without processing the current token, we won't be able to move to the next token.
+
+```sh
+Text: "I love machine learning."
+Tokens: ["I", "love", "machine", "learning", "."]
+Token IDs: [T1, T2, T3, T4, T5]
+Hidden states: [h1, h2, h3, h4, h5]
+Output states: [z1, z2, z3, z4, z5]
+
+at time step 1: z1, h1 = RNN(T1, h0)
+at time step 2: z2, h2 = RNN(T2, h0, h1)
+at time step 3: z3, h3 = RNN(T3, h0, h1, h2)
+at time step 4: z4, h4 = RNN(T4, h0, h1, h2, h3)
+at time step 5: z5, h5 = RNN(T5, h0, h1, h2, h3, h4)
+```
+
+If we pass this sequence of tokens to the RNN, then it will process `T1` first which generates the hidden state `h1` and output `z1`. Then in second step, it will make use of `h1` and `T2` which generates the hidden state `h2` and output `z2` and so on. Therefore, you can see that the computation in RNN is sequential in nature. To get the output states, we must process the sequence sequentially which makes the time complexity of RNN computation as $O(T \times r)$ if we assume each RNN cell takes $r$ units of time and there are total $T$ tokens.
+
+GPT, on the other hand, eliminates the need for sequential processing of data by using an attention mechanism that learns the importance of each part of the input data relative to other parts. This architecture allows each position in the sequence to be processed simultaneously, enhancing the parallelization.
+
+```sh
+Text: "I love machine learning."
+Tokens: ["I", "love", "machine", "learning", "."]
+Token IDs: [T1, T2, T3, T4, T5]
+Output states: [z1, z2, z3, z4, z5]
+
+at time step 1: [z1, ..., z5] = GPT([T1, ..., T5])
+```
+
+Using attention mechanism, the output states corresponding to each token can be generated at one time step by processing the tokens in parallel. This is why the GPT architecture is faster than RNN as the computation is performed in a single time step. The attention mechanism will be discussed in detail in Part 2 of this blog.
+
+#### 3.1.3 Context Length
+
+You might think that since the GPT model can process all the tokens at one time step, so we can increase the number of input tokens $T$ indefinitely. Unfortunately, this is not true. Parallelization in computation does not mean that the computational complexity of GPT is completely independent of $T$. Of course, it will be less that its RNN counterpart but increasing $T$, also increases computational overhead (actually quadratically!) within GPT which will be more clear in Part 2 of this blog. Therefore, we need to restrict the number of tokens that the model can support at one step of computation.
+
+> _Context length_ refers to the maximum number of tokens from the input that the model can consider at one time while processing text. Context length determines how many tokens from the past a model can look back on when making predictions about the next token in a sequence. For instance, if a GPT model has a context length of 512 tokens, it means the model can consider and utilize up to 512 tokens of prior text to inform its generation of subsequent text.
+
+A longer context length allows the model to "remember" more of the previous text, thereby improving its ability to understand context over longer stretches of text. However, increasing context length requires more memory and computational power, as the model needs to manage larger amounts of information simultaneously. In summary, every GPT model supports a limited context length which defines its capability. If the input sequence has more number of tokens than its maximum supported context length, then either we can discard that input from training or we can truncate the sequence up to its maximum supported context length.
+
+### 3.2. Data Sampling by Sliding Window
+
+Suppose, a training corpus text looks like:
+
+```sh
+"Generative pre-trained transformers (GPT) are a type of large language model (LLM) and a prominent framework for generative artificial intelligence.
+They are artificial neural networks that are used in natural language processing tasks.
+GPTs are based on the transformer architecture, pre-trained on large data sets of unlabelled text, and able to generate novel human-like content.
+As of 2023, most LLMs have these characteristics and are sometimes referred to broadly as GPTs."
+```
+
+The first step will be to tokenize the training corpus so that we get a stream of tokens. For simplicity, I am splitting the text based on whitespace only but in reality BPE will be used for tokenization.
+
+```sh
+['Generative', 'pre-trained', 'transformers', '(GPT)', 'are', 'a', 'type', 'of', 'large', 'language', 'model', '(LLM)', 'and', 'a', 'prominent', 'framework', 'for', 'generative', 'artificial', 'intelligence.', 
+'They', 'are', 'artificial', 'neural', 'networks', 'that', 'are', 'used', 'in', 'natural', 'language', 'processing', 'tasks',
+'GPTs', 'are', 'based', 'on', 'the', 'transformer', 'architecture,', 'pre-trained', 'on', 'large', 'data', 'sets', 'of', 'unlabelled', 'text,', 'and', 'able', 'to', 'generate', 'novel', 'human-like', 'content.',
+'As', 'of', '2023,', 'most', 'LLMs', 'have', 'these', 'characteristics', 'and', 'are', 'sometimes', 'referred', 'to', 'broadly', 'as', 'GPTs.']
+```
+
+GPT architecture fundamentally takes a stream of tokens as an input and they returns hidden representation (can be thought of contextual embedding vectors) of the stream of tokens as an output after. If the number of input tokens to the GPT model is $T$ then the number of output context vectors will also be $T$. Since a GPT model can only support a maximum context length of $T_{max}$ tokens, therefore it makes sense to provide $T_{max}$ number of tokens as an input sequence to the GPT model.
+
+Suppose, for this hypothetical example, the GPT model can only support maximum context length of 5 tokens ($T_{max} = 5$). Clearly, you can see that the input tokenized corpus has a stream of tokens that has length of more than $T_{max}$. Therefore, if we want to process this stream of tokens through the GPT model, then we need to sample the token stream via a concept called _sliding window_.
+
+> This _sliding window_ technique involves moving a window of a fixed size (the maximum number of tokens the model can handle at one time, $T_{max}$) across the long input sequence. The window "slides" over the sequence, typically moving forward by one or more tokens after each step (called _stride_), to cover different parts of the sequence. Each sliding window segment becomes an input example sequence which is then fed into the model separately.
+
+```sh
+Stride: 1 token
+Corpus sequence: ['Generative', 'pre-trained', 'transformers', '(GPT)', 'are', 'a', 'type', 'of', 'large', 'language', 'model', '(LLM)', 'and', 'a', 'prominent', 'framework', 'for', 'generative', 'artificial', 'intelligence.',  'They', 'are', 'artificial', ...,'as', 'GPTs.']
+                 [------------, -------------, --------------, -------, -----] (window size = max context length = 5 tokens)
+                               [-------------, --------------, -------, -----, ----] (window size = max context length = 5 tokens)
+                                              [--------------, -------, -----, ----, -----] (window size = max context length = 5 tokens)
+
+Input Example 1: ['Generative', 'pre-trained', 'transformers', '(GPT)', 'are']
+Input Example 2: ['pre-trained', 'transformers', '(GPT)', 'are', 'a']
+Input Example 3: ['transformers', '(GPT)', 'are', 'a', 'type']
+...
+Input Example N: ['referred', 'to', 'broadly', 'as', 'GPTs.']
+```
+
+Note that the above input examples are created by taking a stride of 1 token. The stride means the number of tokens that we slide over the window when we move forward in the token sequence. For example, when we use stride of 2 tokens then the input examples will look like:
+
+```sh
+Stride: 2 tokens
+Corpus sequence: ['Generative', 'pre-trained', 'transformers', '(GPT)', 'are', 'a', 'type', 'of', 'large', 'language', 'model', '(LLM)', 'and', 'a', 'prominent', 'framework', 'for', 'generative', 'artificial', 'intelligence.',  'They', 'are', 'artificial', ...,'as', 'GPTs.']
+                 [------------, -------------, --------------, -------, -----] (window size = max context length = 5 tokens)
+                                              [--------------, -------, -----, ----, -----] (window size = max context length = 5 tokens)
+                                                                       [-----, ----, -----, ----, -------] (window size = max context length = 5 tokens)
+
+Input Example 1: ['Generative', 'pre-trained', 'transformers', '(GPT)', 'are']
+Input Example 2: ['transformers', '(GPT)', 'are', 'a', 'type']
+Input Example 3: ['are', 'a', 'type', 'of', 'large']
+...
+Input Example N: ['referred', 'to', 'broadly', 'as', 'GPTs.']
+```
+
+Now you may think that which stride is better? Is it stride of 1 token or a stride of 2 tokens? In theory, both are bad! The reason is _overfitting_. To understand this better, let's consider the true target tokens at each token position for stride of 1 token examples.
+
+```sh
+Stride: 1 token
+Input Example 1: ['Generative', 'pre-trained', 'transformers', '(GPT)', 'are']
+Target Example 1: ['pre-trained', 'transformers', '(GPT)', 'are', 'a']
+
+Input Example 2: ['pre-trained', 'transformers', '(GPT)', 'are', 'a']
+Target Example 2: ['transformers', '(GPT)', 'are', 'a', 'type']
+
+Input Example 3: ['transformers', '(GPT)', 'are', 'a', 'type']
+Target Example 3: ['(GPT)', 'are', 'a', 'type', 'of']
+
+Loss pairs: (input, target): Number of times it appears
+('Generative', 'pre-trained'): 1
+('pre-trained', 'transformers'): 2 
+('transformers', '(GPT)'): 3
+('(GPT)', 'are'): 3
+('are', 'a'): 3
+('a', 'type'): 2
+('type', 'of'): 1
+```
+
+Note that the loss from an example input sequence will be the sum of all the losses incurred at individual token positions. If we have a batch of $b$ examples then, the loss for the entire batch will be calculated as:
+
+\[
+  L = \sum_{j = 1}^{b} \sum_{i = 1}^{T_{max}} crossEntropyLoss(\mathbf{t}_{true}^{(i, j)}, \mathbf{t}_{pred}^{(i, j)})
+\]
+
+If we pass these 3 examples to the GPT model, then we are overestimating the cross entropy loss in the batch of examples for some of the `(input, target)` tokens. For example, `('are', 'a')` appears 3 times in the training batch and the loss for this pair will be calculated 3 times in the batch. Since we perform backpropagation based on the batch loss, the model will be overfitted if the model sees an `(input, target)` pair multiple times.
+
+> When the stride is small, such as 1 token, each subsequent window overlaps heavily with the previous window. This means that much of the data in one input example is repeated in the next. For example, with a stride of 1, the second window will differ from the first by only one token. This high overlap can lead to a situation where the model starts to memorize the specific sequences and their slight variations rather than learning more general patterns which might not be as relevant in general usage or unseen data.
+
+As you might have guessed that the stride of 2 tokens will produce a less overfitted model than the stride of 1 token. Increasing the stride to 2 tokens reduces the overlap between successive windows but still has some degree of redundancy. This setup can help mitigate overfitting compared to a stride of 1 but may still not be sufficient. Therefore, we need the stride of as large as _maximum context length_ ($T_{max}$) where the overlap between successive windows will be literally zero!
+
+Now it is time to create the input and target tokens pair from a continuous stream of tokens so that this can be fed to the GPT model under the supervised learning setup. The strategy that I would use is as follows:
+
+```sh
+Stride: Tmax tokens (max context length)
+Corpus sequence: ['Generative', 'pre-trained', 'transformers', '(GPT)', 'are', 'a', 'type', 'of', 'large', 'language', 'model', '(LLM)', 'and', 'a', 'prominent', 'framework', 'for', 'generative', 'artificial', 'intelligence.',  'They', 'are', 'artificial', ...,'as', 'GPTs.']
+                 [------------, -------------, --------------, -------, -----] (window size = max context length = 5 tokens)
+                                                                              [---, ------, ----, -------, ----------] (window size = max context length = 5 tokens)
+                                                                                                                      [-------, -------, -----, ---, -----------] (window size = max context length = 5 tokens)
+
+Input Example 1: ['Generative', 'pre-trained', 'transformers', '(GPT)', 'are']
+Input Example 2: ['a', 'type', 'of', 'large', 'language']
+Input Example 3: ['model', '(LLM)', 'and', 'a', 'prominent']
+...
+Input Example N: ['referred', 'to', 'broadly', 'as', 'GPTs.']
+
+Target Example 1: ['pre-trained', 'transformers', '(GPT)', 'are', 'a']
+Target Example 2: ['type', 'of', 'large', 'language', 'model']
+Target Example 3: ['(LLM)', 'and', 'a', 'prominent', 'framework']
+...
+Target Example N: ['to', 'broadly', 'as', 'GPTs.', '<|endoftext|>']
+
+```
+
+Note that when I am using the stride of $T_{max}$ tokens, there is no redundancy of tokens as the windows are not overlapped. Moreover, the target tokes are always created by shifting the input tokens by 1 position as the sole objective of GPT is to predict the next token in a sequence. This above pair of input and target tokens example becomes the dataset for the GPT model which is needed for supervised training.
+
+#### 3.3. Create Training Dataset
+
+Suppose, I want to train the GPT model on the text extracted from the same _Romeo and Juliet_ book that I mentioned before. To create the supervised dataset for training the GPT model, we first need to tokenize the corpus and they apply the sliding window sampling. Let's say the name of the dataset class is `RomeoDataset` which is a subclass of `PyTorch`'s `Dataset` class. You might know that any `Dataset` class must implement the following two methods: `__len__` and `__getitem__`. The `__len__` should return the total number of examples or instances present in the dataset. The `__getitem__` should return the $i$-th example or instance from the dataset when called on index $i$. The `RomeoDataset` should store the text data of the corpus so it needs the corpus file path and it should also need a tokenizer to tokenize the corpus. Since it will sample the example by sliding window, therefore, it will also need the maximum supported context length.
+
+```python
+import torch, tiktoken
+from pathlib import Path
+from torch.utils.data import Dataset
+from typing import Tuple
+
+class RomeoDataset(Dataset):
+    def __init__(self, 
+                 corpus_file_path: Path, 
+                 tokenizer: "tiktoken.tokenizer", 
+                 max_context_len: int) -> None:   
+        super(RomeoDataset, self).__init__()
+        self.tokenizer = tokenizer
+        self.Tmax = max_context_len
+        with open(corpus_file_path, "r") as f:
+            raw_text = f.read()
+            self.enc_text = self.tokenizer.encode(raw_text, 
+                                                  allowed_special={"<|endoftext|>"})
+            self.enc_text.append(self.tokenizer.eot_token) # eot token is needed for last example
+        
+    def __len__(self) -> int:
+        length = torch.floor(torch.tensor((len(self.enc_text)-1)/self.Tmax)) # excludes eot token
+        return int(length.item())
+
+    def __getitem__(self, index: int) -> Tuple[torch.tensor, torch.tensor]:
+        start = index * self.Tmax
+        end = start + self.Tmax
+        input_x = torch.tensor(self.enc_text[start: end])
+        target_y = torch.tensor(self.enc_text[start+1: end+1])
+        return (input_x, target_y)
+```
+
+Note that in the `__getitem__` method, I have implemented the sliding window method of data sampling. Moreover, the stride is always set to $T_{max}$ to prevent overfitting. For the last example from the dataset, the target token at the last token position needs to be `<|endoftext|>` token. For this reason, we have to add an extra `<|endoftext|>` token at the end of text corpus.
+
+```python
+cwd = Path.cwd()
+corpus_file_path = Path(cwd, "tokenizer/corpus/pg1513.txt") # Romeo and Juliet Book
+tokenizer = tiktoken.get_encoding("gpt2")
+
+dataset = RomeoDataset(corpus_file_path, tokenizer, 5) # Context length is taken as 5 for simplicity
+
+print("Length of the dataset: ", len(dataset)) # calls dataset.__len__()
+print("Example 1: ", dataset[0]) # calls dataset.__getitem__(0)
+print("Example 2: ", dataset[1]) # calls dataset.__getitem__(1)
+print("Example 3: ", dataset[2]) # calls dataset.__getitem__(2)
+```
+
+```sh
+Length of the dataset:  10066
+Example 1:  (tensor([ 171,  119,  123,  464, 4935]), tensor([  119,   123,   464,  4935, 20336]))
+Example 2:  (tensor([20336, 46566,   286, 43989,   290]), tensor([46566,   286, 43989,   290, 38201]))
+Example 3:  (tensor([38201,   198,   220,   220,   220]), tensor([198, 220, 220, 220, 220]))
+```
+
+As shown above, the total number of examples will be 10,066 if we set the maximum context length as 5. As expected, the target token IDs are same as input token IDs but shifted by 1 position.
+
+The final step would be to collate the individual examples to form a batch of examples which will be passed to the GPT model for training. At one training step, the GPT model will process all the examples in a batch and updates the parameters of the model exactly once per each batch. This is called a _training step_ of the _mini-batch gradient descent_ algorithm. A _training epoch_ is defined as the iteration of _training steps_ when the model processes the entire training dataset exactly once.
+
+```sh
+batch_size = 32
+dataset_len = 10066
+num_of_batches = floor(10066 / 32) = floor(314.56) = 314
+```
+
+Note that the last batch doesn't have a full batch size so I am going to drop the last batch to maintain homogeneity. In 1 training epoch, the parameters of the GPT model will be updated 314 times (exactly one update per batch) which means, in 1 training epoch, the model undergoes 314 training steps. If the model is trained with 10 epochs, then the parameters will be updated overall 3,140 times!
+
+To create a batch of examples, I will use `PyTorch`'s `DataLoader` class which takes the `dataset` object and returns a batch on demand.
+
+```python
+from torch.utils.data import DataLoader
+dataloader = DataLoader(dataset=dataset, batch_size=4, shuffle=True, drop_last=True)
+batch = next(iter(dataloader))
+print("Number of batches: ", len(dataloader))
+print("input_x: \n", batch[0]) # (b, Tmax)
+print("target_y: \n", batch[1]) # (b, Tmax)
+```
+
+```sh
+Number of batches:  2516
+input_x: 
+tensor([[  543,   523,  1718,  1245,   198],
+      [  508,  3892,  4320,   319,  6642],
+      [   13,   198,  3109,  9862,   790],
+      [ 2612,   351, 45365, 27360,   198]])
+target_y: 
+tensor([[  523,  1718,  1245,   198,  1722],
+      [ 3892,  4320,   319,  6642,    26],
+      [  198,  3109,  9862,   790,  6405],
+      [  351, 45365, 27360,   198, 17278]])
+```
+
+Note that the `DataLoader` returns an object with is an iterator where each item represents a batch (unfortunately, you can't use `[]` to use access them using index!). To break the patterns in the data, I am shuffling the examples before sampling from the dataset. This ensures that the data instances or examples are sampled randomly from the `dataset` so each batch will see a random collection of examples. Moreover, it also ensures that the shuffling order or sampling order will be different in each training epoch. This `dataloader` will be the main input for training the GPT which has both the `input_x` and `target_y` in the form of batches.
+
+## What's Next?
+
+In next blog, I will cover the Embedding layer, Attention layer and Output layer which are the building blocks of GPT model. I will build the model step by step, entirely from scratch using `PyTorch`.
+
+Happy learning! 😃
 
 ### Reference Books
 
@@ -594,5 +888,4 @@ Ilovemachinelearning.<|endoftext|>DoyoualsoloveML?
 
 ### Written by
 
-> Soumen Mondal (Email: [23m2157@iitb.ac.in](mailto:23m2157@iitb.ac.in))
-> MS in AI and DS, CMInDS, IIT Bombay
+> Soumen Mondal (Email: [23m2157@iitb.ac.in](mailto:23m2157@iitb.ac.in)), MS in AI and DS, CMInDS, IIT Bombay
