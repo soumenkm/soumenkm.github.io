@@ -34,7 +34,7 @@ tags:
 
 - Firstly, a medium level knowledge of `Python` (including OOPs concepts) is required, as the implementation will be carried out in this language.
 
-- A foundation level machine learning concepts needed to understand the concepts. This includes neural networks, loss functions, training dynamics etc. The knowledge of Recurrent Neural Network (RNN) is a bonus but not strictly needed.
+- A foundation level machine learning concepts is needed to understand the concepts. This includes neural networks, loss functions, training dynamics etc. The knowledge of Recurrent Neural Network (RNN) is a bonus but not strictly needed.
 
 - Experience with deep learning frameworks `PyTorch` is necessary, as it will be used to build and train the model. Basic knowledge of `Huggingface` library is a plus.
 
@@ -73,11 +73,11 @@ Any form of data (it could be audio, image, video or text) can be converted to a
 
 Word embeddings convert text into a set of feature vectors where each word (or more technically _token_) in the corpus is represented by a point in a vector space. The vectors are trained to ensure that words with similar meanings are located close to each other.
 
-Word embeddings are extensively used in transformer based large language models (LLMs). There are several algorithms to generate word embedding but one of the most popular algorithm is _Word2Vec_. In principle, Word2Vec is trained using one of two architectures: _CBOW (Continuous Bag of Words)_ or _Skip-gram_. In the CBOW architecture, the model predicts the current word based on the context, and in the Skip-gram architecture, it predicts surrounding context words given the current word, both using a simple neural network which is trained to optimize similarity between the word's embedding vectors.
+Word embeddings are extensively used in transformer based large language models (LLMs). There are several algorithms to generate word embedding but one of the most popular algorithms is _Word2Vec_. In principle, Word2Vec is trained using one of two architectures: _CBOW (Continuous Bag of Words)_ or _Skip-gram_. In the CBOW architecture, the model predicts the current word based on the context, and in the Skip-gram architecture, it predicts surrounding context words given the current word, both using a simple neural network which is trained to optimize similarity between the word's embedding vectors.
 
-> In the embedding space, words that are closely related to a particular concept would form a cluster in the embedding space. Essentially, these embeddings create a high-dimensional map where distances between points (word embedding vectors) reflect how related the words are the source language.
+> Inside the embedding space, words that are closely related to a particular concept would form a cluster in the embedding space. Essentially, these embeddings create a high-dimensional map where distances between points (word embedding vectors) reflect how related the words are the source language.
 
-For language modeling task, we could use the pre-trained word embeddings such as one obtained from Word2Vec to generate the word embeddings but it won't be efficient due to mismatch between Word2vec's training corpus and the GPT like LLM's training corpus. To capture complex patterns and context in the training corpus, LLMs would generate the word embeddings on the fly, directly from the training data at the time of training the model. This embedding vector will be highly optimized for the training corpus that have been used to train the LLM.
+For language modeling task, we could use the pre-trained word embeddings such as one obtained from Word2Vec to generate the word embeddings, but it won't be efficient due to mismatch between Word2vec's training corpus and the GPT like LLM's training corpus. To capture complex patterns and context in the training corpus, LLMs would generate the word embeddings on the fly, directly from the training data at the time of training the model. This embedding vector will be highly optimized for the training corpus that have been used to train the LLM.
 
 <p align="center">
 <img src="/images/word_embedding.jpeg" alt="Word Embedding" width="400"/>
@@ -91,7 +91,7 @@ Sentence or document embeddings extend the concept of word embeddings to larger 
 
 Positional embeddings are used in models that need to understand sequence order (like sentences in text or time series data), adding information about the relative or absolute position of elements in the sequence.
 
-In NLP, models like GPT, BERT etc. use positional embeddings to retain the order of words in a sentence which is crucial for understanding context and meaning accurately. This itself is a huge topic and it will be covered later in this blog.
+In NLP, models like GPT, BERT etc. use positional embeddings to retain the order of words in a sentence which is crucial for understanding context and meaning accurately. This itself is a huge topic, and it will be covered later in this blog.
 
 ## 2. Tokenization
 
@@ -115,7 +115,7 @@ Advanced tokenization techniques like subword tokenization (e.g., Byte-Pair Enco
 
 #### 2.3.1 A Quick Refresher on `re` Library
 
-In practical application, we are never going to build our own tokenizer but it will give an idea of how the tokenization is performed in pre-built tokenizers. To build our own tokenizer, we can use Python's regular expression `re` library.
+In practical application, we are never going to build our own tokenizer, but it will give an idea of how the tokenization is performed in pre-built tokenizers. To build our own tokenizer, we can use Python's regular expression `re` library.
 
 ```python
 import re
@@ -136,9 +136,9 @@ print(result2)
 
 Note the difference between two patterns. The first pattern is not capturing the group (if the match is found based on pattern `\s` which means any form of whitespace) as it is not retaining the group in the final result. Since we are using capturing group (`r"(...)"`) in the second pattern, It will capture the groups where the pattern is present while retaining the groups into the list.
 
-The list of words in the result is called _tokens_. Note that there is a problem in this tokenization scheme as the list has individual words along with the punctuation. If we want to treat a word followed or preceded by punctuation, then the number of unique tokens will be large so the size of _vocabulary_ (list of tokens) will increase exponentially. Therefore, we want to treat the punctuations as separate tokens. 
+The list of words in the result is called _tokens_. Note that there is a problem in this tokenization scheme as the list has individual words along with the punctuation. If we want to treat a word followed or preceded by punctuation, then the number of unique tokens will be large so the size of _vocabulary_ (list of tokens) will increase exponentially. Therefore, we want to treat the punctuations as separate tokens.
 
-> In _cased_ tokenization scheme, the case sensitivity of tokens matters for example `apple` is different from `Apple` so they will be treated as two different unique tokens. However, in _uncased_ tokenization scheme, those two tokens will be treated as one unique token `apple`.
+> In _cased_ tokenization scheme, the case sensitivity of tokens matters for example `apple` is different from `Apple`, so they will be treated as two different unique tokens. However, in _uncased_ tokenization scheme, those two tokens will be treated as one unique token `apple`.
 
 Now consider a complex tokenization pattern where we want to split the text based on all the punctuation characters, whitespace and digits but at the same time we want to retain the capturing groups as well otherwise, the groups will be lost from the list.
 
@@ -161,7 +161,7 @@ print(result3)
 ['abc', '1', '', '-', 'def', '2', '', ' ', '', '--', '', ' ', 'ghi', '123', '', '.', '', ' ', 'jkl', ' ', '', '2', '', ' ', '', '30', '', ' ', 'mno', '.', '']
 ```
 
-`pattern1` is designed to split the text at punctuation characters (commas, periods, colons, semicolons, question marks, exclamation etc.) or whitespace characters (`\s` includes spaces, tabs, newlines, etc.). `pattern1` splits the text on three types of occurrences which are `--` (a double hyphen) or any characters from the character group or any form of whitespace. Note the special (`|`) symbol which means logical OR operation. The bracket (`[...]`) is defining a character class meaning that any characters withing the bracket will be matched for creating the groups. When it starts scanning the characters, the moment it finds `pattern1` then it will pause to split the expression, captures the group and resumes scanning thereafter. Empty strings (`''`) appear where there are no characters between two consecutive delimiters. For example, between two consecutive delimiter `ghi123. jkl` (delimiters are `.` and `\s`), there is no character so it will capture the group as empty string (`''`)
+`pattern1` is designed to split the text at punctuation characters (commas, periods, colons, semicolons, question marks, exclamation etc.) or whitespace characters (`\s` includes spaces, tabs, newlines, etc.). `pattern1` splits the text on three types of occurrences which are `--` (a double hyphen) or any characters from the character group or any form of whitespace. Note the special (`|`) symbol which means logical OR operation. The bracket (`[...]`) is defining a character class meaning that any characters withing the bracket will be matched for creating the groups. When it starts scanning the characters, the moment it finds `pattern1` then it will pause to split the expression, captures the group and resumes scanning thereafter. Empty strings (`''`) appear where there are no characters between two consecutive delimiters. For example, between two consecutive delimiters `ghi123. jkl` (delimiters are `.` and `\s`), there is no character, so it will capture the group as empty string (`''`)
 
 `pattern2` splits the text on two types of occurrences. `--` (a double hyphen) or `[^0-9a-zA-Z]` which matches any character that is not a number `(0-9)`, not a lowercase letter `(a-z)`, and not an uppercase letter `(A-Z)`. Note the special (`^`) symbol which means logical NOT operation.
 
@@ -171,7 +171,7 @@ print(result3)
 
 #### 2.3.2. Convert `tokens` into `token IDs`
 
-Once the tokens are created, we need to convert the tokens into an integer called _token IDs_. Given a corpus, the first task is to tokenize the entire corpus which gives us the list of tokens which is also called a _vocabulary_. Then the process in which we map each of the tokens of the vocabulary into an integer is called building a vocabulary. Since the vocabulary is represented as alphabetically sorted list so the list index can be considered as token IDs. Moreover, we can also represent a vocabulary using a dictionary where the dictionary keys will be represented by tokens and the values will be represented by the corresponding token IDs. It is also possible to invert the vocabulary dictionary since it is one to one mapping between tokens and token IDs. In the _inverted vocabulary_, the key will represent a token ID and the value will represent its corresponding token.
+Once the tokens are created, we need to convert the tokens into an integer called _token IDs_. Given a corpus, the first task is to tokenize the entire corpus which gives us the list of tokens which is also called a _vocabulary_. Then the process in which we map each of the tokens of the vocabulary into an integer is called building a vocabulary. Since the vocabulary is represented as alphabetically sorted list, so the list index can be considered as token IDs. Moreover, we can also represent a vocabulary using a dictionary where the dictionary keys will be represented by tokens and the values will be represented by the corresponding token IDs. It is also possible to invert the vocabulary dictionary since it is one to one mapping between tokens and token IDs. In the _inverted vocabulary_, the key will represent a token ID and the value will represent its corresponding token.
 
 <p align="center">
 <img src="/images/tokenizer.jpeg" alt="Tokenizer" width="400"/>
@@ -205,7 +205,7 @@ So far, I have just defined the prototype of the class `Tokenizer`. Before, I st
 
 #### 2.3.3. Special Tokens
 
-There is a problem in the vocabulary shown in the figure. What if I call the `encode` method on some sample text where some of the tokens are not part of vocabulary?
+There is a problem in the vocabulary shown in the figure. What if I call the `encode` method on some sample text where some tokens are not part of vocabulary?
 
 ```python
 tokenizer = Tokenizer("corpus.txt")
@@ -217,15 +217,15 @@ Note that the tokens `Do`, `you`, `?` are not part of the vocabulary so if we tr
 
 There are other special tokens as follows:
 
-- **`<bos>` or `[CLS]` or `</s>`:** This token is called _beginning of sequence_ token and it is used to mark the start of the token sequence. It helps the LLM to understand where a piece of content begins.
+- **`<bos>` or `[CLS]` or `</s>`:** This token is called _beginning of sequence_ token, and it is used to mark the start of the token sequence. It helps the LLM to understand where a piece of content begins.
 
-- **`<eos>` or `[SEP]`:** This token is called _end of sequence_ token and it is positioned at the end of the sequence. It is useful when we want to concatenate multiple unrelated texts in a sequence.
+- **`<eos>` or `[SEP]`:** This token is called _end of sequence_ token, and it is positioned at the end of the sequence. It is useful when we want to concatenate multiple unrelated texts in a sequence.
 
 - **`<pad> or [PAD] or [MASK]`:** This token is called _padding_ token. The inputs to any LLM is processed in batches. In a batch of sequences, the batch may have varying length of texts. To ensure that all text have same length, the shorter length texts are extended using the padding token.
 
-The usage of special tokens is architecture and task dependent. The name of the special tokens are immaterial. It all depends on the context where we want to use the special token. For example, you can use `[MASK]` for padding as well as masking some words intentionally in the sequence. Note that GPT2 model does not use any of the above tokens. Rather, it uses `<|endoftext|>` for `<bos>` and `<eos>`. For padding also, it uses the same `<|endoftext|>` token because, in the attention mechanism, we generally do not attend the padding tokens so the choice of padding token is immaterial. GPT2 doesn't require an `<unk>` token either for a reason that will be clarified later in the BPE section.
+The usage of special tokens is architecture and task dependent. The name of the special tokens are immaterial. It all depends on the context where we want to use the special token. For example, you can use `[MASK]` for padding as well as masking some words intentionally in the sequence. Note that GPT2 model does not use any of the above tokens. Rather, it uses `<|endoftext|>` for `<bos>` and `<eos>`. For padding also, it uses the same `<|endoftext|>` token because, in the attention mechanism, we generally do not attend the padding tokens, so the choice of padding token is immaterial. GPT2 doesn't require an `<unk>` token either for a reason that will be clarified later in the BPE section.
 
-> When we train an LLM on multiple unrelated documents (it could be books, news articles, Wikipedia pages, internet crawl etc.), it is common to shift the context from one document to another document. We need a way to tell the LLM that the context of two documents are different and they are unrelated. Therefore, we insert a context token `<|endoftext|>` before starting of each document which helps the LLM to understand that the text sources are being concatenated for training although they are contextually unrelated from each others.
+> When we train an LLM on multiple unrelated documents (it could be books, news articles, Wikipedia pages, internet crawl etc.), it is common to shift the context from one document to another document. We need a way to tell the LLM that the context of two documents are different, and they are unrelated. Therefore, we insert a context token `<|endoftext|>` before starting of each document which helps the LLM to understand that the text sources are being concatenated for training, although they are contextually unrelated from each others.
 
 ```python
 text1 = "<|endoftext|> This is a text on Machine Learning"
@@ -235,7 +235,7 @@ text4 = "<|endoftext|> This is a text on US democracy"
 text = text1 + text2 + text3 + text4 # defines a sequence for LLM training
 ```
 
-Note that a token sequence can consists of multiple unrelated tokens as long as it doesn't exceed the maximum supported sequence length of the LLM. Every LLM can support some finite number of tokens in one sequence (for GPT2, it is 1024 tokens). Since, this number is quite large, it is very common to include multiple contextually different texts in same sequence but separated by `<|endoftext|>` token.
+Note that a token sequence can consist of multiple unrelated tokens as long as it doesn't exceed the maximum supported sequence length of the LLM. Every LLM can support some finite number of tokens in one sequence (for GPT2, it is 1024 tokens). Since, this number is quite large, it is very common to include multiple contextually different texts in same sequence but separated by `<|endoftext|>` token.
 
 #### 2.3.4 Code of Simple `Tokenizer`
 
@@ -274,6 +274,7 @@ class Tokenizer:
         text = " ".join(tokens)
         return text
 ```
+
 First, I am tokenizing the entire corpus using the `tokenize` method where the corpus is split into token streams and then filtering out the empty and whitespace tokens. Furthermore, I am also adding the special context `<|endoftext|>` token to handle unknown words and other context.
 
 To test the `Tokenizer`, I will download a book (Romeo and Juliet by William Shakespeare) in `.txt` format from [Gutenberg](https://www.gutenberg.org/ebooks/1777.txt.utf-8). You can download any other books of your choice from the [Gutenberg](https://www.gutenberg.org) project page.
@@ -296,7 +297,7 @@ Random 10 tokens from vocabulary:  [(('Veronese', 912),), (('Contents', 204),), 
 <|endoftext|> token id:  4933
 ```
 
-When I give the path of the book `pg1513.txt`, then the tokenizer creates the vocabulary from the contents of that book. It creates overall `4934` tokens from the corpus and some of the tokens and its corresponding token IDs can be seen in the output. As expected, the `<|endoftext|>` token gets the last entry in the vocabulary as a special token.
+When I give the path of the book `pg1513.txt`, then the tokenizer creates the vocabulary from the contents of that book. It creates overall `4934` tokens from the corpus and some tokens and its corresponding token IDs can be seen in the output. As expected, the `<|endoftext|>` token gets the last entry in the vocabulary as a special token.
 
 ```python
 orig_text = "I love machine learning. Do you also love ML?"
@@ -340,7 +341,7 @@ The `re.sub` function replaces the found pattern (in the argument) with just the
 
 We have already seen that splitting a text into smaller chunks gives tokenized text. There are many ways to perform the tokenization process. A naive way could be to split the text by whitespace. As we have seen earlier that in this method, the punctuation characters would be attached to the tokenized words. Therefore, we should take the punctuation characters as separate tokens. However, if we use punctuation and spaces for tokenization then some English words will completely lose its meaning. For example, `shouldn't`, `could't`, `wouldn't` etc. will be tokenized as `shouldn`, `'`, `t` which doesn't make sense. It would have been better, had we tokenized it as `should` and `n't`. This was an example of _rule-based_ tokenization where depending on rules, we tokenize a text (`Spacy` library employs it).
 
-_Space-based_, _Punctuation-based_ and _Rule-based_ are all examples of _word tokenization_ which means splitting the sentence into words. One downside of word tokenization method is that the size of the vocabulary will be large. As a result, the embedding matrix that the GPT model learns will be enormous and unmanageable (size of embedding matrix is `vocab_size` by `embedding_dimension`). Another option could be _character level tokenization_ which treats each individual character as a token. This tokenization is least preferred because it makes the model more harder to learn any meaningful representation from the tokens due to its atomic nature.
+_Space-based_, _Punctuation-based_ and _Rule-based_ are all examples of _word tokenization_ which means splitting the sentence into words. One downside of word tokenization method is that the size of the vocabulary will be large. As a result, the embedding matrix that the GPT model learns will be enormous and unmanageable (size of embedding matrix is `vocab_size` by `embedding_dimension`). Another option could be _character level tokenization_ which treats each individual character as a token. This tokenization is least preferred because it makes the model harder to learn any meaningful representation from the tokens due to its atomic nature.
 
 _Subword tokenization_ is a method used to break down words into smaller, meaningful units called subwords. This approach bridges the gap between character-level and word-level tokenization. The fundamental principle behind subword tokenization is to decompose words into frequently occurring substrings, ensuring that even if a word has never been encountered before, its components can be recognized and processed. 
 > In short, frequently used words should not be split into smaller subwords but rarely used words should be decomposed into meaningful subwords so that the size of vocabulary can be reduced. There are two popular subword tokenization methods used in LLMs: _Byte Pair Encoding (BPE)_, which is used in GPT models, and _WordPiece_, which is used in BERT models.
@@ -385,7 +386,7 @@ w o r l d </w> : (w, o), (o, r), ..., (d, </w>)
 . </w>         : (., </w>)
 ```
 
-Now we can count the frequency of these pair of symbols as the number of times these pairs occur in the pre-tokenized word stream. Identify the most frequent pair of symbols (often called byte pair) and merge it to represent as a single symbol. For example, `(h, e)` is the most frequent byte pair so we merge it to form a new symbol `he`.
+Now we can count the frequency of these pair of symbols as the number of times these pairs occur in the pre-tokenized word stream. Identify the most frequent pair of symbols (often called byte pair) and merge it to represent as a single symbol. For example, `(h, e)` is the most frequent byte pair, so we merge it to form a new symbol `he`.
 
 ```sh
 (h, e): 2 (most frequent byte pair so merged to "he")
@@ -494,11 +495,11 @@ Hello there! How are you doing today? <|endoftext|> Do you like movies?
 Hello there! How are you doing today? <|endoftext|> Do you like movies?
 ```
 
-Note that I am using an argument `allowed_special` which enforces the tokenizer to treat the string literal `<|endoftext|>` as a special token and not the string literal. Without this argument, it will treat `<|endoftext|>` as string literal and it will tokenize this literal as usual (but you have to remove it from `disallowed_special` set). You can see the output `en2` (in list of tokens instead of token IDs), has not broken down the word `<|endoftext|>` into tokens unlike the output `en1`.
+Note that I am using an argument `allowed_special` which enforces the tokenizer to treat the string literal `<|endoftext|>` as a special token and not the string literal. Without this argument, it will treat `<|endoftext|>` as string literal, and it will tokenize this literal as usual (but you have to remove it from `disallowed_special` set). You can see the output `en2` (in list of tokens instead of token IDs), has not broken down the word `<|endoftext|>` into tokens unlike the output `en1`.
 
 #### 2.4.5 Wordpiece Tokenizer
 
-We have already seen one popular subword-based tokenizer: _BPE tokenizer_ which is used in GPT model. There is another type of subword-based tokenizer: _Wordpiece tokenizer_ which is used in BERT model. Wordpiece is similar to BPE but it doesn't choose the most frequent byte pair (that was the case in BPE). BPE rather chooses the byte pair that maximizes the likelihood of the training data once that token is added in the vocabulary. A typical Wordpiece tokens would look like:
+We have already seen one popular subword-based tokenizer: _BPE tokenizer_ which is used in GPT model. There is another type of subword-based tokenizer: _Wordpiece tokenizer_ which is used in BERT model. Wordpiece is similar to BPE, but it doesn't choose the most frequent byte pair (that was the case in BPE). BPE rather chooses the byte pair that maximizes the likelihood of the training data once that token is added in the vocabulary. A typical Wordpiece tokens would look like:
 
 ```sh
 Word: "Anthropomorphize"
@@ -509,9 +510,9 @@ The Wordpiece tokenizer would split the words into multiple tokens where `##` me
 
 ### 2.5 Huggingface's 🤗 Tokenizer
 
-I have already implemented a word-level simple `Tokenizer` from scratch. However, for real world application, nobody will develop a BPE or Wordpiece tokenizer from scratch! Therefore, we should rely on ann external library such as Huggingface where we can take the implementation of any of the tokenizer such as BPE or Wordpiece.
+I have already implemented a word-level simple `Tokenizer` from scratch. However, for real world application, nobody will develop a BPE or Wordpiece tokenizer from scratch! Therefore, we should rely on an external library such as Huggingface where we can take the implementation of the tokenizer such as BPE or Wordpiece.
 
-> Note that I am talking about the implementation of the tokenizer. That means, Huggingface's `tokenizers` library contains all the classes related to BPE or Wordpiece tokenizer so that we don't have to code them from scratch. After choosing one of the tokenizer class, we have to train the tokenizer on our corpus so that we build the vocabulary out of our own selected corpus. This is fundamentally different from taking a pre-trained tokenizer which was trained on somebody else's corpus. For example, Huggingface's `transformers` library provides all the pre-trained tokenizers such as `BertTokenizer` or `GPT2Tokenizer` etc. These pre-trained tokenizers were trained on an enormous corpus which we don't have access but we have the access to the vocabulary that was created out of that corpus. Therefore, these pre-trained tokenizers would be used most of the time unless we want to pre-train an LLM on our own customized corpus. In that case, for that customized corpus, we have to build the vocabulary using the tokenizer classes provided by the `tokenizers` library. As a rule of thumb, if you want to use other's vocabulary then use `transformers` library, otherwise use `tokenizers` library to build your own vocabulary.
+> Note that I am talking about the implementation of the tokenizer. That means, Huggingface's `tokenizers` library contains all the classes related to BPE or Wordpiece tokenizer so that we don't have to code them from scratch. After choosing one of the tokenizer class, we have to train the tokenizer on our corpus so that we build the vocabulary out of our own selected corpus. This is fundamentally different from taking a pre-trained tokenizer which was trained on somebody else's corpus. For example, Huggingface's `transformers` library provides all the pre-trained tokenizers such as `BertTokenizer` or `GPT2Tokenizer` etc. These pre-trained tokenizers were trained on an enormous corpus which we don't have access, but we have the access to the vocabulary that was created out of that corpus. Therefore, these pre-trained tokenizers would be used most of the time unless we want to pre-train an LLM on our own customized corpus. In that case, for that customized corpus, we have to build the vocabulary using the tokenizer classes provided by the `tokenizers` library. As a rule of thumb, if you want to use other's vocabulary then use `transformers` library, otherwise use `tokenizers` library to build your own vocabulary.
 
 The main class that handles the tokenization process is class `tn.Tokenizer` which takes the model as an input and returns the tokenizer object.
 
@@ -597,7 +598,7 @@ Ilovemachinelearning.<|endoftext|>DoyoualsoloveML?
 
 #### 3.1.1 Goal of GPT like LLM
 
-In the architecture of GPT, the task of generating text is approached as a sequence generation problem where the model predicts one token at a time. Each token generated is conditioned on the tokens that precede it, and outputs the probability distribution of the generated token conditioned on previous tokens which is learned during the model's training phase. This approach is what allows GPT models to create coherent and contextually appropriate text based on the input provided.
+In the architecture of GPT, the task of generating text is approached as a sequence generation problem where the model predicts one token at a time. Each token generated is conditioned on the tokens that precede it, and outputs the probability distribution of the generated token conditioned on previous tokens which is learned during the model's training phase. This approach is what allows GPT models to create coherent, and contextually appropriate text based on the input provided.
 
 Mathematically, from the GPT, we try to predict the token $\mathbf{t}^{(i)}$ given the previous sequence of tokens $(\mathbf{t}^{(j)})_{j = 1}^{j = i-1}$. Suppose the GPT predicts the token $\mathbf{t}^{(i)}$ with probability:
 
@@ -607,7 +608,7 @@ Mathematically, from the GPT, we try to predict the token $\mathbf{t}^{(i)}$ giv
 
 During the training phase, we try to learn this probability distribution by minimizing the cross entropy loss between the true token and the predicted token which is generated by the GPT model. When given a prompt or a starting sequence of tokens (also called _context_), the GPT model generates the next token that is most likely to follow from the given context. This is achieved through a softmax layer that outputs a probability distribution over the entire vocabulary, and the token with the highest probability is selected as the next token in the sequence.
 
-> In short, the GPT model predicts the next token based on the information of previous tokens. This is called _autoregressive_ nature of the model which means, when the model generates a token $\mathbf{t}^{(i)}$, then it should not look at the future tokens information such as $(\mathbf{t}^{(i+1)}, \mathbf{t}^{(i+2)},\dots,\mathbf{t}^{(T_{max})})$. Rather, it should only look at the previous tokens such as $(\mathbf{t}^{(i-1)}, \mathbf{t}^{(i-2)},\dots,\mathbf{t}^{(1)})$. This is crucial to understand because, we are not providing the input that is limited to only the previous tokens, rather we are providing the entire token sequence that the model supports (up to model's maximum context length ($T_{max}$), a concept which will be discussed in next section).
+> In short, the GPT model predicts the next token based on the information of previous tokens. This is called _autoregressive_ nature of the model which means, when the model generates a token $\mathbf{t}^{(i)}$, then it should not look at the future tokens' information such as $(\mathbf{t}^{(i+1)}, \mathbf{t}^{(i+2)},\dots,\mathbf{t}^{(T_{max})})$. Rather, it should only look at the previous tokens such as $(\mathbf{t}^{(i-1)}, \mathbf{t}^{(i-2)},\dots,\mathbf{t}^{(1)})$. This is crucial to understand because, we are not providing the input that is limited to only the previous tokens, rather we are providing the entire token sequence that the model supports (up to model's maximum context length ($T_{max}$), a concept which will be discussed in next section).
 
 <p align="center">
 <img src="/images/gpt-model-goal.jpeg" alt="Tokenizer" width="400"/>
@@ -615,7 +616,7 @@ During the training phase, we try to learn this probability distribution by mini
 
 Note that the GPT model outputs the context vector $\mathbf{z}$ at every token position. To generate the predicted token at a token position $i$, we will feed the context vector $\mathbf{z}^{(i)}$ to a softmax layer over the length of vocabulary. The index corresponding to the maximum softmax probability will denote the predicted token. This figure shows that if we provide a sequence, then it has the capability of generating tokens at all the token positions since the models outputs context vector at all token position.
 
-During training, we would be interested to predict the tokens at all positions but during inference, we would be interested to predict the token at the last position. This is because, we want to minimize the loss at all the token positions, therefore, we would want to predict the tokens at all the token positions. However, note that the predicted token will not always match with the true target token shown in the figure. If there is  a mismatch between the true target token and the predicted token, then the model will incur some loss which will be backpropagated through the layers of the GPT model and that is how the model "learns" to predict accurate tokens at all the token position.
+During training, we would be interested to predict the tokens at all positions but during inference, we would be interested to predict the token at the last position. This is because, we want to minimize the loss at all the token positions, therefore, we would want to predict the tokens at all the token positions. However, note that the predicted token will not always match with the true target token shown in the figure. If there is a mismatch between the true target token and the predicted token, then the model will incur some loss which will be backpropagated through the layers of the GPT model and that is how the model "learns" to predict accurate tokens at all the token position.
 
 During inference, GPT predicts one token at a time at the last token position as shown in the Figure. The predicted token will then be appended with the input tokens and fed into the model again to predict another token. This process will continue until `<|endoftext|>` token is predicted or a maximum number of generated tokens is reached. However, you must understand the fact that once the model sees an input sequence, it processes the entire sequence at one step to generate the new token. Therefore, the model will predict a new token at one time step.
 
@@ -680,7 +681,7 @@ The first step will be to tokenize the training corpus so that we get a stream o
 'As', 'of', '2023,', 'most', 'LLMs', 'have', 'these', 'characteristics', 'and', 'are', 'sometimes', 'referred', 'to', 'broadly', 'as', 'GPTs.']
 ```
 
-GPT architecture fundamentally takes a stream of tokens as an input and they returns hidden representation (can be thought of contextual embedding vectors) of the stream of tokens as an output after. If the number of input tokens to the GPT model is $T$ then the number of output context vectors will also be $T$. Since a GPT model can only support a maximum context length of $T_{max}$ tokens, therefore it makes sense to provide $T_{max}$ number of tokens as an input sequence to the GPT model.
+GPT architecture fundamentally takes a stream of tokens as an input, and it returns hidden representation (can be thought of contextual embedding vectors) of the stream of tokens as an output after. If the number of input tokens to the GPT model is $T$ then the number of output context vectors will also be $T$. Since a GPT model can only support a maximum context length of $T_{max}$ tokens, therefore it makes sense to provide $T_{max}$ number of tokens as an input sequence to the GPT model.
 
 Suppose, for this hypothetical example, the GPT model can only support maximum context length of 5 tokens ($T_{max} = 5$). Clearly, you can see that the input tokenized corpus has a stream of tokens that has length of more than $T_{max}$. Therefore, if we want to process this stream of tokens through the GPT model, then we need to sample the token stream via a concept called _sliding window_.
 
@@ -742,10 +743,10 @@ Loss pairs: (input, target): Number of times it appears
 Note that the loss from an example input sequence will be the sum of all the losses incurred at individual token positions. If we have a batch of $b$ examples then, the loss for the entire batch will be calculated as:
 
 \[
-  L = \sum_{j = 1}^{b} \sum_{i = 1}^{T_{max}} crossEntropyLoss(\mathbf{t}_{true}^{(i, j)}, \mathbf{t}_{pred}^{(i, j)})
+  L = \sum_{j = 1}^{b} \sum_{i = 1}^{T_{max}} crossEntropyLoss(\mathbf{t}_t^{(i, j)}, \mathbf{t}_p^{(i, j)})
 \]
 
-If we pass these 3 examples to the GPT model, then we are overestimating the cross entropy loss in the batch of examples for some of the `(input, target)` tokens. For example, `('are', 'a')` appears 3 times in the training batch and the loss for this pair will be calculated 3 times in the batch. Since we perform backpropagation based on the batch loss, the model will be overfitted if the model sees an `(input, target)` pair multiple times.
+Where $\mathbf{t}_t$ and $\mathbf{t}_p$ represent the true and predicted token representation respectively. If we pass these 3 examples to the GPT model, then we are overestimating the cross entropy loss in the batch of examples for some `(input, target)` tokens. For example, `('are', 'a')` appears 3 times in the training batch and the loss for this pair will be calculated 3 times in the batch. Since we perform backpropagation based on the batch loss, the model will be overfitted if the model sees an `(input, target)` pair multiple times.
 
 > When the stride is small, such as 1 token, each subsequent window overlaps heavily with the previous window. This means that much of the data in one input example is repeated in the next. For example, with a stride of 1, the second window will differ from the first by only one token. This high overlap can lead to a situation where the model starts to memorize the specific sequences and their slight variations rather than learning more general patterns which might not be as relevant in general usage or unseen data.
 
@@ -778,7 +779,7 @@ Note that when I am using the stride of $T_{max}$ tokens, there is no redundancy
 
 #### 3.3. Create Training Dataset
 
-Suppose, I want to train the GPT model on the text extracted from the same _Romeo and Juliet_ book that I mentioned before. To create the supervised dataset for training the GPT model, we first need to tokenize the corpus and they apply the sliding window sampling. Let's say the name of the dataset class is `RomeoDataset` which is a subclass of `PyTorch`'s `Dataset` class. You might know that any `Dataset` class must implement the following two methods: `__len__` and `__getitem__`. The `__len__` should return the total number of examples or instances present in the dataset. The `__getitem__` should return the $i$-th example or instance from the dataset when called on index $i$. The `RomeoDataset` should store the text data of the corpus so it needs the corpus file path and it should also need a tokenizer to tokenize the corpus. Since it will sample the example by sliding window, therefore, it will also need the maximum supported context length.
+Suppose, I want to train the GPT model on the text extracted from the same _Romeo and Juliet_ book that I mentioned before. To create the supervised dataset for training the GPT model, we first need to tokenize the corpus, and they apply the sliding window sampling. Let's say the name of the dataset class is `RomeoDataset` which is a subclass of `PyTorch`'s `Dataset` class. You might know that any `Dataset` class must implement the following two methods: `__len__` and `__getitem__`. The `__len__` should return the total number of examples or instances present in the dataset. The `__getitem__` should return the $i$-th example or instance from the dataset when called on index $i$. The `RomeoDataset` should store the text data of the corpus, so it needs the corpus file path, and it should also need a tokenizer to tokenize the corpus. Since it will sample the example by sliding window, therefore, it will also need the maximum supported context length.
 
 ```python
 import torch, tiktoken
@@ -844,7 +845,7 @@ dataset_len = 10066
 num_of_batches = floor(10066 / 32) = floor(314.56) = 314
 ```
 
-Note that the last batch doesn't have a full batch size so I am going to drop the last batch to maintain homogeneity. In 1 training epoch, the parameters of the GPT model will be updated 314 times (exactly one update per batch) which means, in 1 training epoch, the model undergoes 314 training steps. If the model is trained with 10 epochs, then the parameters will be updated overall 3,140 times!
+Note that the last batch doesn't have a full batch size, so I am going to drop the last batch to maintain homogeneity. In 1 training epoch, the parameters of the GPT model will be updated 314 times (exactly one update per batch) which means, in 1 training epoch, the model undergoes 314 training steps. If the model is trained with 10 epochs, then the parameters will be updated overall 3,140 times!
 
 To create a batch of examples, I will use `PyTorch`'s `DataLoader` class which takes the `dataset` object and returns a batch on demand.
 
@@ -871,7 +872,7 @@ tensor([[  523,  1718,  1245,   198,  1722],
       [  351, 45365, 27360,   198, 17278]])
 ```
 
-Note that the `DataLoader` returns an object with is an iterator where each item represents a batch (unfortunately, you can't use `[]` to use access them using index!). To break the patterns in the data, I am shuffling the examples before sampling from the dataset. This ensures that the data instances or examples are sampled randomly from the `dataset` so each batch will see a random collection of examples. Moreover, it also ensures that the shuffling order or sampling order will be different in each training epoch. This `dataloader` will be the main input for training the GPT which has both the `input_x` and `target_y` in the form of batches.
+Note that the `DataLoader` returns an object with is an iterator where each item represents a batch (unfortunately, you can't use `[]` to use access them using index!). To break the patterns in the data, I am shuffling the examples before sampling from the dataset. This ensures that the data instances or examples are sampled randomly from the `dataset`, so each batch will see a random collection of examples. Moreover, it also ensures that the shuffling order or sampling order will be different in each training epoch. This `dataloader` will be the main input for training the GPT which has both the `input_x` and `target_y` in the form of batches.
 
 ## What's Next?
 
