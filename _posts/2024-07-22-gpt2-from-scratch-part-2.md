@@ -134,6 +134,75 @@ x1023 = [0.19, 0.72, 0.93, 0.44, 0.51] # Word embedding at token position 1023
 e1023 = [1023, 1023, 1023, 1023, 1023] # Position embedding at token position 1023
 ```
 
+But will this "naive" positional embedding work in real life applications? Of course, it wouldn't work. Ultimately, we are going to add the word embedding vector and the positional embedding vector element-wise. Therefore, for long sequences, the final input embedding will be completely governed by the positional embedding alone. For example, the addition of `x1023` and `e1023` will be approximately equal to `e1023`. This means, we have lost the information of "words" in the sequence, and it only captures the positional information of the sequence. As a result, the language model trained on this "naive" positional embedding is bound to fail in real life applications. From this "bad" positional embedding, we have identified one important property of a "good" positional embedding as follows:
+
+> Property 1: The positional embedding should be designed in such a way that there is a fair amount of balance between the word information and the position information. In other words, the positional information should not dominate fully in the input embedding.
+
+One could think to improve the above positional embedding by "normalizing" it. It means, we are going to rescale the absolute sequence numbers to lie in between `[0,1]` by dividing it to the largest sequence number. In this way, we will make sure that all the positional embedding values are in between `[0,1]`. Therefore, if there are $T$ tokens, then we will divide each position index (absolute position in the sequence) by $T-1$. 
+
+For example if we have an embedding dimension of $d=5$ and a sequence of $T=1024$ tokens then:
+
+```python
+x0 = [0.1, 0.05, 0.14, 0.42, 0.25] # Word embedding at token position 0
+e0 = [0, 0, 0, 0, 0] # Position embedding at token position 0
+
+x1 = [0.16, 0.72, 0.28, 0.39, 1.5] # Word embedding at token position 1
+e1 = [1/1023, 1/1023, 1/1023, 1/1023, 1/1023] # Position embedding at token position 1
+
+...
+
+x1023 = [0.19, 0.72, 0.93, 0.44, 0.51] # Word embedding at token position 1023
+e1023 = [1, 1, 1, 1, 1] # Position embedding at token position 1023
+```
+
+Again, a natural question would be: will this positional embedding work? The answer would be "no". In this normalization process, we are making the positional embedding as a function of sequence length $T$. This means, if the model sees two sequences of two different lengths, then for the same position, there will be two different positional embedding. This violates the fundamental property of any positional embedding which says the positional embedding should be entirely dependent of position and not the sequence length.
+
+For example if we have an embedding dimension of $d=5$ and two sequences of $T=3$ tokens and $T=4$ tokens then:
+
+```python
+Sequence A: T = 3
+
+x0 = [0.1, 0.05, 0.14, 0.42, 0.25] # Word embedding at token position 0
+e0 = [0, 0, 0, 0, 0] # Position embedding at token position 0
+
+x1 = [0.16, 0.72, 0.28, 0.39, 1.5] # Word embedding at token position 1
+e1 = [0.5, 0.5, 0.5, 0.5, 0.5] # Position embedding at token position 1
+
+x2 = [0.19, 0.72, 0.93, 0.44, 0.51] # Word embedding at token position 2
+e2 = [1, 1, 1, 1, 1] # Position embedding at token position 2
+
+Sequence B: T = 4
+
+x0 = [0.11, 0.15, 0.24, 0.44, 0.27] # Word embedding at token position 0
+e0 = [0, 0, 0, 0, 0] # Position embedding at token position 0
+
+x1 = [0.61, 0.27, 0.82, 0.93, 1.3] # Word embedding at token position 1
+e1 = [0.33, 0.33, 0.33, 0.333, 0.33] # Position embedding at token position 1
+
+x2 = [0.91, 0.27, 0.39, 0.24, 0.15] # Word embedding at token position 2
+e2 = [0.66, 0.66, 0.66, 0.66, 0.66] # Position embedding at token position 2
+
+x3 = [0.89, 0.24, 0.30, 0.14, 0.91] # Word embedding at token position 3
+e3 = [1, 1, 1, 1, 1] # Position embedding at token position 3
+```
+
+Note that for these two sequences, if you notice at any position say `e1` then, it will be different for these 2 sequences. Therefore, the model can get "confused" as it may think of different positions based on different training examples. 
+
+> Property 2: The positional embedding should be designed in such a way that it should only depend on the position information. In other words, We want a "good" positional embedding which will be purely function of position that will be constant at all the positions irrespective of the training examples. The positional embedding should be "unique" of that position, and it should not change from sequence to sequence. The positional embedding for a position should remain invariant to the variable length input sequences.
+
+#### 1.2.3. Sinusoidal Positional Embedding
+
+The family of sinusoidal functions such as sines and cosines satisfy one of the property that the values are bounded between `[-1,1]`. If you plot the values of sine as a function of position index, then the values won't be unique after the a full cycle. 
+
+
+
+
+
+
+
+
+
+
 
 ## 2. Attention Layer
 ### 2.1. Motivation for Attention
