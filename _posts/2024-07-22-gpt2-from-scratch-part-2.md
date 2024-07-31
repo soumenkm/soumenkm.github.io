@@ -192,16 +192,104 @@ Note that for these two sequences, if you notice at any position say `e1` then, 
 
 #### 1.2.3. Sinusoidal Positional Embedding
 
-The family of sinusoidal functions such as sines and cosines satisfy one of the property that the values are bounded between `[-1,1]`. If you plot the values of sine as a function of position index, then the values won't be unique after the a full cycle. 
+The family of sinusoidal functions such as sines and cosines satisfy one of the property that the values are bounded between `[-1,1]`. If you plot the values of sine as a function of position index, then the values won't be unique after a full cycle as shown in the following figure.
 
+<p align="center">
+<img src="/images/pos_emb1.jpeg" alt="pos_emb1" width="400"/>
+</p>
 
+For example, if we use the sine function to represent the positional embedding then the values will be repeated for `e1` and `e5` which violates the property of positional embedding. The nature of the sine functions are always periodic, meaning their values are bound to repeat after a certain position. Since, we know that the positional embedding must be unique at all the positions, therefore to achieve uniqueness, we can use multiple sine functions with different frequency at different dimension index. Note that, in the figure, we can use different frequency $\omega$ for different dimension index $i$, instead of using the same $\omega$ for all the dimension indices. This allows us to create an embedding vector where each dimension values will be different (unlike the values shown in the figure), and if we can intelligently combine the sine functions, then we can acheive unique position embedding for all the positions. 
 
+<p align="center">
+<img src="/images/pos_emb2.jpeg" alt="pos_emb2" width="400"/>
+</p>
 
+To get the unique positional embedding, we are going to vary the frequency at all the embedding components. From the above figure, it is clear that, the embedding vectors are unique. It means, the $i$-th component of the embedding vector at any position index $p$ will be obtained by taking the sine of $p$ with the frequency $\omega _ i$ as shown below:
 
+\[ [\mathbf{e} _ p] _ i = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \mathbf{e} _ p = ([\mathbf{e} _ p] _ i) _ {i = 0} ^ {i = d-1} \in \mathbb{R}^d
+\]
 
+If we use the frequency values, $\omega _ 0, \omega  _ 1, \dots, \omega _ {d-1}$ that are unique at all the dimension index (or component), then it is guaranteed that the positional embedding vector will be unique at all the positions.
 
+<p align="center">
+<img src="/images/pos_emb3.jpeg" alt="pos_emb3" width="400"/>
+</p>
 
+In the above figure, the process of obtaining the positional embedding values at all the positions and at all the dimension index is shown. Although, it was sufficient to use sine functions alone to obtain unique positional embedding, the author of [Attention is All You Need](https://arxiv.org/abs/1706.03762) paper used a mixture of sine and cosine functions. The idea is that, for even component of embedding vector, the sine function is used to obtain the values at all the positions, and for odd component of embedding vector, the cosine function is used to obtain the values as shown in the below figure:
 
+<p align="center">
+<img src="/images/pos_emb4.jpeg" alt="pos_emb4" width="400"/>
+</p>
+
+The positional embedding vector for any position $p$ is given as:
+
+\[ 
+    [\mathbf{e} _ p] _ {2i} = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\
+    [\mathbf{e} _ p] _ {2i+1} = \cos(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\
+    \mathbf{e} _ p = ([\mathbf{e} _ p] _ j) _ {j = 0} ^ {j = d-1} \in \mathbb{R}^d \\
+\]
+
+Note that the positional embedding is function of position and it doesn't matter, which word is present in that position. Since, there is no learnable parameter in the equation above, the positional embedding is not learnable. There are other variations of the above equation to make the implementation more straightforward. For example, instead of alternating usage of sine and cosine functions in even and odd positions, we can use the first half components as sine function and the rest half components as cosine function without violating any of the properties of positional embedding.
+
+In LLM literature, there are numerous positional embedding that are in practice. Sinusoidal embeddings are not the only positional embedding that is used in LLM. GPT like LLMs do not even use the sinusoidal positional embedding which is non-learnable. Rather, the positional embedding is also learned from the training data during the pre-training stage.
+
+Let's now see the code of positional embedding layer in `PyTorch`.
+
+```python
+import torch
+import math
+
+class PositionalEmbedding(torch.nn.Module):
+    def __init__(self, embedding_dim: int, max_context_length: int):
+        super(PositionalEmbedding, self).__init__()
+        self.d = embedding_dim
+        self.Tmax = max_context_length
+        self.register_buffer(name="pos_emb", 
+                             tensor=self.get_positional_embedding())
+        
+    def get_positional_embedding(self) -> torch.tensor:
+        mid_index = int(math.ceil((self.d-1)/2)) # excluding mid_index
+        position_tensor = torch.arange(0, self.Tmax).unsqueeze(1) # (Tmax, 1)
+        pos_emb_list = []
+        for i in range(mid_index):
+            omega_i = 1 / (10000 ** (2 * i / self.d))
+            pos_emb_list.append(torch.sin(position_tensor * omega_i))
+            pos_emb_list.append(torch.cos(position_tensor * omega_i))
+        
+        pos_emb = torch.cat(pos_emb_list, dim=1)  # (Tmax, d)
+        assert pos_emb.shape == (self.Tmax, self.d)
+        return pos_emb
+        
+    def forward(self, x):
+        """x.shape = (b, T)"""
+        b, T = x.shape
+        pos_emb = self.pos_emb[:T, :]  # (T, d)
+        pos_emb = pos_emb.unsqueeze(0).expand(b, T, self.d)  # (b, T, d)
+        return pos_emb
+```
+
+Note that the above code assumes that the dimension of embedding is always an even integer. Since the positional embedding needs to be stored as a state dictionary of the model (although it is not trainable!), I have used `register_buffer` to treat the `pos_emb` as a parameter of the model which is non-trainable. Moreover, the positional embedding is constant for all the input sequences in the batch (`register_buffer` would be covered in great detail in later sections). Therefore, the same positional embedding is expanded across all  the input examples using `expand` method (similar to broadcasting!)
+
+To test the code, we can pass a random input, as for positional embedding, the values of the input token IDs doesn't matter. It is the number of token IDs ($T$) that matters for the computation.
+
+```python
+pos_emb_layer = PositionalEmbedding(embedding_dim=4, max_context_length=6)
+print(pos_emb_layer(x=torch.rand(size=(2,3)))) # (2, 3, 4)
+```
+
+```sh
+tensor([[[ 0.0000,  1.0000,  0.0000,  1.0000],
+         [ 0.8415,  0.5403,  0.0100,  0.9999],
+         [ 0.9093, -0.4161,  0.0200,  0.9998]],
+
+        [[ 0.0000,  1.0000,  0.0000,  1.0000],
+         [ 0.8415,  0.5403,  0.0100,  0.9999],
+         [ 0.9093, -0.4161,  0.0200,  0.9998]]])
+```
+
+Note that the positional embedding is same for both the examples in the batch as explained before. 
+
+#### 1.2.4. Learnable Positional Embedding
 
 
 ## 2. Attention Layer
