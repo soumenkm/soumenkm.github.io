@@ -225,8 +225,12 @@ In the above figure, the process of obtaining the positional embedding values at
 The positional embedding vector for any position $p$ is given as:
 
 \[ 
-    \mathbf{e} _ p ^ {2i} = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\\\
-    \mathbf{e} _ p ^ {2i+1} = \cos(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\\\
+    \mathbf{e} _ p ^ {2i} = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\}
+\]
+\[
+    \mathbf{e} _ p ^ {2i+1} = \cos(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\}
+\]
+\[
     \mathbf{e} _ p = (\mathbf{e} _ p ^ j) _ {j = 0} ^ {j = d-1} \in \mathbb{R}^d
 \]
 
