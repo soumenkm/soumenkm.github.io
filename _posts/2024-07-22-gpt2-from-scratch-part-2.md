@@ -206,7 +206,8 @@ For example, if we use the sine function to represent the positional embedding t
 
 To get the unique positional embedding, we are going to vary the frequency at all the embedding components. From the above figure, it is clear that, the embedding vectors are unique. It means, the $i$-th component of the embedding vector at any position index $p$ will be obtained by taking the sine of $p$ with the frequency $\omega _ i$ as shown below:
 
-\[ [\mathbf{e} _ p] _ i = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \mathbf{e} _ p = ([\mathbf{e} _ p] _ i) _ {i = 0} ^ {i = d-1} \in \mathbb{R}^d
+\[ 
+    \left[\mathbf{e} _ p\right] _ i = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \mathbf{e} _ p = (\left[\mathbf{e} _ p\right] _ i) _ {i = 0} ^ {i = d-1} \in \mathbb{R}^d
 \]
 
 If we use the frequency values, $\omega _ 0, \omega  _ 1, \dots, \omega _ {d-1}$ that are unique at all the dimension index (or component), then it is guaranteed that the positional embedding vector will be unique at all the positions.
@@ -224,9 +225,9 @@ In the above figure, the process of obtaining the positional embedding values at
 The positional embedding vector for any position $p$ is given as:
 
 \[ 
-    [\mathbf{e} _ p] _ {2i} = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\
-    [\mathbf{e} _ p] _ {2i+1} = \cos(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\
-    \mathbf{e} _ p = ([\mathbf{e} _ p] _ j) _ {j = 0} ^ {j = d-1} \in \mathbb{R}^d \\
+    \left[\mathbf{e} _ p\right] _ {2i} = \sin(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\\\
+    \left[\mathbf{e} _ p\right] _ {2i+1} = \cos(\omega _ i \cdot p) \in \mathbb{R} \quad ; \omega _ i = 1/10000^{2i/d} \quad; i \in \{0, 1, \dots, \left\lfloor \frac{d-1}{2} \right\rfloor\} \\\\
+    \mathbf{e} _ p = (\left[\mathbf{e} _ p\right] _ j) _ {j = 0} ^ {j = d-1} \in \mathbb{R}^d
 \]
 
 Note that the positional embedding is function of position and it doesn't matter, which word is present in that position. Since, there is no learnable parameter in the equation above, the positional embedding is not learnable. There are other variations of the above equation to make the implementation more straightforward. For example, instead of alternating usage of sine and cosine functions in even and odd positions, we can use the first half components as sine function and the rest half components as cosine function without violating any of the properties of positional embedding.
